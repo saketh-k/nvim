@@ -69,6 +69,7 @@ vim.opt.confirm = true
 vim.opt.tabstop = 2
 
 -- set :terminal to powershell if on windows, else do nothing
-if vim.fn.has 'win32' and true or false then
-  vim.opt.shell = 'powershell'
+vim.opt.shell = 'bash'
+if vim.fn.has 'win32' then
+  --vim.opt.shell = 'powershell'
 end

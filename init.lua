@@ -1,17 +1,27 @@
 -- SAKETH'S INIT LUA
-
+--
+-- NIXCATS
+require('nixCatsUtils').setup { non_nix_value = true }
 -- Set <space> as the leader key
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Tell vim we're using a Nerd Font
-vim.g.have_nerd_font = true
+vim.g.have_nerd_font = nixCats 'have_nerd_font'
 
 require 'custom.options'
 require 'custom.keybinds'
 require 'custom.autocmd'
 
+-- NOTE: nixCats: You might want to move the lazy-lock.json file
+local function getlockfilepath()
+  if require('nixCatsUtils').isNixCats and type(nixCats.settings.unwrappedCfgPath) == 'string' then
+    return nixCats.settings.unwrappedCfgPath .. '/lazy-lock.json'
+  else
+    return vim.fn.stdpath 'config' .. '/lazy-lock.json'
+  end
+end
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -24,8 +34,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
--- [[ Configure and install plugins ]]
-require('lazy').setup({
+require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 'lazy.nvim' }, {
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- See `:help gitsigns` to understand what the configuration keys do
